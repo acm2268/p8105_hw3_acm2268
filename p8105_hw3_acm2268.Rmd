@@ -133,6 +133,7 @@ brfss_df = select(brfss_smart2010, year = Year, state_abbr = Locationabbr, locat
 
 ```
 
+
 ##BRFSS exploratory data analysis
 
 ```{r p2_expl_analysis_1}
@@ -140,9 +141,15 @@ brfss_df = select(brfss_smart2010, year = Year, state_abbr = Locationabbr, locat
 brfss_df %>%
  filter(year == 2002) %>%
   group_by(state_abbr) %>%
-  summarize(n_locations = n_distinct(location_desc))
+  summarize(n_locations = n_distinct(location_desc)) %>%
+  filter(n_locations > 6)
 
+brfss_df %>%
+ filter(year == 2010) %>%
+  group_by(state_abbr) %>%
+  summarize(n_locations = n_distinct(location_desc)) %>%
+  filter(n_locations > 6)
 
 ```
 
-
+In 2002, the states Connecticut, Florida, Massachusetts, North Carolina, New Jersey, and Pennsylvania were observed at 7 or more locations. In 2010, the states California, Colorado, Florida, Massachusetts, Maryland, North Carolina, Nebraska, New Jersey, New York, Ohio, Pennsylvania, South Carolina, Texas, and Washington were observed at 7 or more locations.
