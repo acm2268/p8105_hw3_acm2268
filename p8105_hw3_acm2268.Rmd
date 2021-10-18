@@ -136,7 +136,7 @@ brfss_df = select(brfss_smart2010, year = Year, state_abbr = Locationabbr, locat
 
 ##BRFSS exploratory data analysis
 
-###Evaluate states and the number of locations observed in 2002 and 2010
+###Exploratory analysis of states and the number of locations observed in 2002 and 2010
 
 ```{r p2_states_n_locs}
 
@@ -169,7 +169,28 @@ excellent_df = select(brfss_df, year, state_abbr, data_value, location_desc, res
 ggplot(data = excellent_df, aes(x = year, y = avg_value, color = state_abbr)) +
   geom_line(data = excellent_df) + theme(legend.position = "right")
   
+```
 
+###Exploratory analysis of the distribution of data value responses among locations in NY State FOR 2006 and 2010
+
+```{r}
+
+ny_df = select(brfss_df, year, state_abbr, location_desc, response, data_value) %>%
+  filter(year %in% c(2006, 2010) & state_abbr == "NY") %>%
+  group_by(year, response)
+
+ggplot(ny_df, aes(x = data_value, fill = response)) + 
+  geom_density(alpha = .4, adjust = .5, color = "blue") +
+  facet_grid(. ~ year)
+
+ny_df %>% 
+  ungroup(response)
+
+ggplot(ny_df, aes(x = data_value, fill = state_abbr)) + 
+  geom_density(alpha = .4, adjust = .5, color = "blue") +
+  facet_grid(. ~ year)
 
 ```
+
+
 
