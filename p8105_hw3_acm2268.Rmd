@@ -99,3 +99,50 @@ instacart %>%
   pivot_wider(names_from = order_dow, values_from = mean_hour)
 ```
 
+#Question 2: BRFSS
+
+##Load BRFSS data
+
+```{r p2_load_data}
+
+library(p8105.datasets)
+data("brfss_smart2010") 
+
+```
+
+##Understand BRFSS data
+
+```{r p2_understand_data}
+
+skimr::skim(brfss_smart2010)
+
+str(brfss_smart2010)
+
+```
+
+##Clean BRFSS data
+
+```{r p2_clean_data}
+
+brfss_df = select(brfss_smart2010, year = Year, state_abbr = Locationabbr, location_desc = Locationdesc, topic = Topic, response = Response, data_value = Data_value, data_type = Data_value_type, data_unit = Data_value_unit ) %>%
+  filter(topic == "Overall Health" & response %in% c("Excellent", "Very Good", "Good", "Fair", "Poor")) %>%
+  mutate(
+    response = factor(response),
+    response = forcats::fct_relevel(response, c("Poor", "Fair", "Good", "Very Good", "Excellent"))
+  ) 
+
+```
+
+##BRFSS exploratory data analysis
+
+```{r p2_expl_analysis_1}
+
+brfss_df %>%
+ filter(year == 2002) %>%
+  group_by(state_abbr) %>%
+  summarize(n_locations = n_distinct(location_desc))
+
+
+```
+
+
