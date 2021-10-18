@@ -136,7 +136,9 @@ brfss_df = select(brfss_smart2010, year = Year, state_abbr = Locationabbr, locat
 
 ##BRFSS exploratory data analysis
 
-```{r p2_expl_analysis_1}
+###Evaluate states and the number of locations observed in 2002 and 2010
+
+```{r p2_states_n_locs}
 
 brfss_df %>%
  filter(year == 2002) %>%
@@ -153,3 +155,21 @@ brfss_df %>%
 ```
 
 In 2002, the states Connecticut, Florida, Massachusetts, North Carolina, New Jersey, and Pennsylvania were observed at 7 or more locations. In 2010, the states California, Colorado, Florida, Massachusetts, Maryland, North Carolina, Nebraska, New Jersey, New York, Ohio, Pennsylvania, South Carolina, Texas, and Washington were observed at 7 or more locations.
+
+###Exploratory analysis of "excellent" responses
+
+```{r p2_excellent_resp}
+
+excellent_df = select(brfss_df, year, state_abbr, data_value, location_desc, response) %>%
+  filter(response == "Excellent") %>%
+  group_by(year, state_abbr) %>%
+  mutate(avg_value = mean(data_value, na.rm = TRUE)) %>%
+  select(-data_value) 
+
+ggplot(data = excellent_df, aes(x = year, y = avg_value, color = state_abbr)) +
+  geom_line(data = excellent_df) + theme(legend.position = "right")
+  
+
+
+```
+
