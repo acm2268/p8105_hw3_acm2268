@@ -75,16 +75,27 @@ ggplot(n_items_df, aes(x = aisle, y = n, color = department)) +
 
 ```{r p1_table_3_most_popular items}
 
-n_items_df = instacart %>% 
-  group_by(product_name, aisle,) %>%
-  summarise(n = n())
-
-filter(n_items_df, n > 10000) %>%
-print()
-
-
-
-
+instacart %>%
+  filter(aisle %in% c("baking ingredients", "dog food care", "packaged vegetables fruits")) %>%
+  select(aisle, product_name) %>%
+  group_by(product_name) %>%
+  mutate(
+    n_ordered = n(),
+    n_rank = min_rank(desc(n_ordered)))
 ```
 
+##Table: Mean hour at which Pink Lady Apples and Coffee Ice Cream are ordered each day of the week
+
+```{r p1_mean_hour_dow}
+
+instacart %>% 
+  mutate(
+    order_dow = recode(order_dow, `0` = "Monday", `1` = "Tuesday", `2` = "Wednesday", `3` = "Thursday", `4` = "Friday", `5` = "Saturday", `6` = "Sunday")) %>%
+  select(product_name, order_dow, order_hour_of_day) %>% 
+  filter(product_name %in% c("Pink Lady Apples", "Coffee Ice Cream")) %>%
+  group_by(product_name, order_dow) %>%
+  summarize(
+    mean_hour = mean(order_hour_of_day)) %>%
+  pivot_wider(names_from = order_dow, values_from = mean_hour)
+```
 
