@@ -193,4 +193,23 @@ ggplot(ny_df, aes(x = data_value, fill = state_abbr)) +
 ```
 
 
+#Question 3: Accelerometer
+
+##Load, clean, and tidy the accelerometer data
+
+```{r p3_load_clean_tidy}
+
+accel_df = read_csv(file = "./data/accel_data.csv") %>%
+janitor::clean_names() %>%
+  mutate(
+    type_of_day = ifelse(day %in% c("Monday", "Tuesday", "Wednesday", "Thursday", "Friday"), "weekday", 
+                         ifelse(day %in% c("Saturday", "Sunday"), "weekend", ""))
+    ) %>%
+  relocate(week, type_of_day)
+
+
+
+```
+
+
 
