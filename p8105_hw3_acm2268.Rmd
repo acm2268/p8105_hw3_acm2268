@@ -205,11 +205,24 @@ janitor::clean_names() %>%
     type_of_day = ifelse(day %in% c("Monday", "Tuesday", "Wednesday", "Thursday", "Friday"), "weekday", 
                          ifelse(day %in% c("Saturday", "Sunday"), "weekend", ""))
     ) %>%
-  relocate(week, type_of_day)
+  relocate(week, type_of_day) %>%
+  round(activity_1:activity_1440, digit = 2)
 
 str(accel_df)
 
 ```
 
+##Aggregate across minutes to create a total activity variable
+
+```{r}
+
+accel_df %>%
+    mutate(
+    total_activity = rowSums(select(., starts_with("activity")))
+  ) %>%
+  relocate(week, type_of_day, day_id, day, total_activity) %>%
+  round(total_activity, digit = 2)
+
+```
 
 
