@@ -211,5 +211,14 @@ str(accel_df)
 
 ```
 
+##Aggregate across minutes to create a total activity variable
+
+```{r}
+accel_df %>% 
+mutate(
+  total_activity = round(rowSums(select(., starts_with("activity")), na.rm = FALSE)), digit = 2) %>%
+  relocate(week, type_of_day, day_id, day, total_activity)
+
+```
 
 
