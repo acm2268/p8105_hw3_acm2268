@@ -54,7 +54,7 @@ This dataset is the Instacart Online Grocery Shopping Dataset from 2017 and the 
 
 There are `r max(instacart$aisle_id)` aisles and the most items are ordered from aisles `r  names(sort(table(instacart$aisle_id), decreasing = TRUE)[1:3])`.
 
-##Plotting the number of items ordered per aisle among aisles with > 10,000 items ordered
+##Plotting the number of itms ordered per aisle among aisles with > 10,000 items ordered
 
 ```{r p1_plot_n_items_ordered}
 
@@ -75,13 +75,17 @@ ggplot(n_items_df, aes(x = aisle, y = n, color = department)) +
 
 ```{r p1_table_3_most_popular items}
 
-instacart %>%
-  filter(aisle %in% c("baking ingredients", "dog food care", "packaged vegetables fruits")) %>%
-  select(aisle, product_name) %>%
-  group_by(product_name) %>%
+pop_items_df = instacart %>%
+  filter(aisle == c("baking ingredients", "dog food care", "packaged vegetables fruits")) %>%
+  group_by(aisle) %>%
+  count(product_name) %>%
   mutate(
-    n_ordered = n(),
-    n_rank = min_rank(desc(n_ordered)))
+    popular_rank = min_rank(desc(n))) %>%
+    filter(popular_rank <= 3) %>%
+  relocate(aisle, popular_rank)
+  
+print(pop_items_df)
+
 ```
 
 ##Table: Mean hour at which Pink Lady Apples and Coffee Ice Cream are ordered each day of the week
