@@ -68,7 +68,7 @@ n_items_df = instacart %>%
 
 ggplot(n_items_df, aes(x = reorder(aisle, -n), y = n)) + 
   geom_bar(stat = "identity", fill = "lightblue2") +
-  theme(axis.text.x = element_text(family = "Times New Roman", size = 9, angle = 60, hjust = 1)) +
+  theme(axis.text.x = element_text(size = 9, angle = 60, hjust = 1)) +
   labs(x = "Aisle Name", y = "Number Ordered", title = "Number of Items Ordered per Aisle")
 
 ```
@@ -155,17 +155,26 @@ brfss_df = select(brfss_smart2010, year = Year, state_abbr = Locationabbr, locat
 
 ```{r p2_states_n_locs}
 
-brfss_df %>%
+brfss_02_df = brfss_df %>%
  filter(year == 2002) %>%
   group_by(state_abbr) %>%
   summarize(n_locations = n_distinct(location_desc)) %>%
   filter(n_locations > 6)
 
-brfss_df %>%
+knitr::kable(brfss_02_df, 
+             digits = 1,
+             caption = "*The Number of Locations for States Observed at > 6 Locations in 2002*")
+
+brfss_10_df = 
+  brfss_df %>%
  filter(year == 2010) %>%
   group_by(state_abbr) %>%
   summarize(n_locations = n_distinct(location_desc)) %>%
   filter(n_locations > 6)
+
+knitr::kable(brfss_10_df, 
+             digits = 1,
+             caption = "*The Number of Locations for States Observed at > 6 Locations in 2010*")
 
 ```
 
@@ -239,9 +248,13 @@ view(accel_cleaned)
 ##Aggregate across minutes to create a total activity variable
 
 ```{r p3_total_activity}
-accel_cleaned %>% 
+accel_tot_act = accel_cleaned %>% 
   group_by(day_id) %>%
   summarize(total_activity = sum(activity_count))
+
+knitr::kable(accel_tot_act, 
+             digits = 2,
+             caption = "*Total Accelerometer Activity per Day Observed*")
 
 ```
 ##Create a plot that shows the 24-hour activity time courses for each day
