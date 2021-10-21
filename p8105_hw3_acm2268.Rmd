@@ -136,10 +136,10 @@ str(brfss_smart2010)
 ```{r p2_clean_data}
 
 brfss_df = select(brfss_smart2010, year = Year, state_abbr = Locationabbr, location_desc = Locationdesc, topic = Topic, response = Response, data_value = Data_value, data_type = Data_value_type, data_unit = Data_value_unit ) %>%
-  filter(topic == "Overall Health" & response %in% c("Excellent", "Very Good", "Good", "Fair", "Poor")) %>%
+  filter(topic == "Overall Health" & response %in% c("Excellent", "Good", "Fair", "Poor")) %>%
   mutate(
     response = factor(response),
-    response = forcats::fct_relevel(response, c("Poor", "Fair", "Good", "Very Good", "Excellent"))
+    response = forcats::fct_relevel(response, c("Poor", "Fair", "Good", "Excellent"))
   ) 
 
 ```
@@ -192,14 +192,8 @@ ny_df = select(brfss_df, year, state_abbr, location_desc, response, data_value) 
 
 ggplot(ny_df, aes(x = data_value, fill = response)) + 
   geom_density(alpha = .4, adjust = .5, color = "blue") +
-  facet_grid(. ~ year)
-
-ny_df %>% 
-  ungroup(response)
-
-ggplot(ny_df, aes(x = data_value, fill = state_abbr)) + 
-  geom_density(alpha = .4, adjust = .5, color = "blue") +
-  facet_grid(. ~ year)
+  facet_grid(. ~ year) +
+  labs(x = "Data Values", y = "Density", title = "Distribution of Data Values by Response Type among Locations in NY State: 2006 vs. 2010")
 
 ```
 
@@ -250,7 +244,8 @@ accel_cleaned %>%
              y = activity_count, 
              color = day)) +
   geom_smooth(se = FALSE) + 
-  theme(legend.position = "right")
+  theme(legend.position = "right") +
+  labs(x = "Minutes", y = "Activity Counts", title = "24-hour Activity by Minute per Day")
 
 
 ```
